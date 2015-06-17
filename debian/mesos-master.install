@@ -1,0 +1,2 @@
+debian/mesos-init-wrapper  /usr/bin
+/usr/sbin/mesos-master /usr/sbin

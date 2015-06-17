@@ -1,0 +1,5 @@
+mesos (0.22.0~trusty) trusty; urgency=low
+
+  * Apache Mesos 0.22.0
+
+ -- Apache Mesos <dev@mesos.apache.org>  Wed, 10 Jun 2015 12:57:07 +0000

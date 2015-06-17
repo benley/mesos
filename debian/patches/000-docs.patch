@@ -1,0 +1,23 @@
+diff --git a/docs/network-monitoring.md b/docs/network-monitoring.md
+index ac36ba3..3a666dd 100644
+--- a/docs/network-monitoring.md
++++ b/docs/network-monitoring.md
+@@ -21,14 +21,12 @@ Currently, network monitoring is only supported on Linux. Make sure your kernel
+ * [e374c618b1465f0292047a9f4c244bd71ab5f1f0](https://github.com/torvalds/linux/commit/e374c618b1465f0292047a9f4c244bd71ab5f1f0)
+ * [25f929fbff0d1bcebf2e92656d33025cd330cbf8](https://github.com/torvalds/linux/commit/25f929fbff0d1bcebf2e92656d33025cd330cbf8)
+ 
+-Make sure the following packages are installed on the slave:
++Make sure the following packages are installed on any build and slave servers:
+ 
+-* [libnl3](http://www.infradead.org/~tgr/libnl/) >= 3.2.25
+-* [iproute](http://www.linuxfoundation.org/collaborate/workgroups/networking/iproute2) (>= 2.6.39 is advised but not required for debugging purpose)
+-
+-On the build machine, you need to install the following packages:
++* [libnl3](https://github.com/thom311/libnl/releases) >= 3.2.26
++  * [libnl3 documentation](http://www.infradead.org/~tgr/libnl)
+ 
+-* [libnl3-devel](http://www.infradead.org/~tgr/libnl/) >= 3.2.25
++* [iproute](http://www.linuxfoundation.org/collaborate/workgroups/networking/iproute2) (>= 2.6.39 is advised but not required for debugging purpose)
+ 
+ ### Configure and build
+ 

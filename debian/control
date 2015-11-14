@@ -1,20 +1,30 @@
 Source: mesos
-Section: network
+Section: net
 Priority: optional
 Maintainer: Apache Mesos <dev@mesos.apache.org>
 Build-Depends:
  autoconf,
  automake,
  debhelper (>= 9~),
+ default-jdk,
  dh-autoreconf,
- libnl-3-dev,
+ libapr1-dev,
+ libcurl-dev,
+ libnl-3-dev (>= 3.2.24~),
+ libnl-idiag-3-dev (>= 3.2.24~),
+ libnl-route-3-dev (>= 3.2.24~),
  libsasl2-dev,
+ libsasl2-modules,
  libsnappy-dev,
+ libsvn-dev,
  libtool,
+ maven,
  python-all-dev (>= 2.6.6-3~),
- python-protobuf (>= 2.5.0)
+ python-protobuf (>= 2.5.0),
+ python-setuptools,
+ zlib1g-dev,
 X-Python-Version: >= 2.6
-Standards-Version: 3.9.4
+Standards-Version: 3.9.5
 
 Package: libmesos
 Architecture: any

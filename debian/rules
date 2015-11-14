@@ -13,6 +13,8 @@ export GTEST_FILTER = "-CgroupsAnyHierarchyWithCpuMemoryFreezerTest.*"
 export DEB_LDFLAGS_MAINT_APPEND=-Wl,--as-needed,-lsnappy
 export DEB_BUILD_OPTIONS=parallel=$(shell grep "core id" -c /proc/cpuinfo)
 
+export JAVA_HOME := /usr/lib/jvm/default-java
+
 override_dh_auto_configure:
 	dh_auto_configure -- --prefix=/usr \
 		--localstatedir=/usr/lib/ \

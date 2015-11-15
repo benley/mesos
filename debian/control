@@ -9,7 +9,7 @@ Build-Depends:
  default-jdk,
  dh-autoreconf,
  libapr1-dev,
- libcurl-dev,
+ libcurl4-gnutls-dev | libcurl-dev,
  libnl-3-dev (>= 3.2.24~),
  libnl-idiag-3-dev (>= 3.2.24~),
  libnl-route-3-dev (>= 3.2.24~),
@@ -72,9 +72,12 @@ Description: Python bindings for Mesos
 Package: mesos-common
 Architecture: any
 Section: misc
+Conflicts: mesos
 Depends:
  libmesos (= ${binary:Version}),
  python-mesos (= ${binary:Version}),
+ ${misc:Depends},
+ ${python:Depends},
  ${shlibs:Depends}
 Description: Mesos common
  Apache Mesos is a cluster manager that provides efficient resource isolation
@@ -85,8 +88,11 @@ Description: Mesos common
 Package: mesos-master
 Architecture: any
 Section: misc
+Conflicts: mesos
 Depends:
- mesos-common (= ${binary:Version})
+ mesos-common (= ${binary:Version}),
+ ${misc:Depends},
+ ${shlibs:Depends}
 Description: Mesos master daemon
  Apache Mesos is a cluster manager that provides efficient resource isolation
  and sharing across distributed applications, or frameworks. It can run
@@ -96,11 +102,13 @@ Description: Mesos master daemon
 Package: mesos-slave
 Architecture: any
 Section: misc
+Conflicts: mesos
 Depends:
- mesos-common (= ${binary:Version})
+ mesos-common (= ${binary:Version}),
+ ${misc:Depends},
+ ${shlibs:Depends}
 Description: Mesos slave daemon
  Apache Mesos is a cluster manager that provides efficient resource isolation
  and sharing across distributed applications, or frameworks. It can run
  Hadoop, MPI, Hypertable, Spark (a new framework for low-latency interactive
  and iterative jobs), and other applications.
-

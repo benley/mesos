@@ -1,2 +1,2 @@
 /usr/include
-/usr/lib/*/libmesos-*.so /usr/lib
+usr/lib/*/libmesos.so

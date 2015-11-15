@@ -1,0 +1,398 @@
+.TH MESOS "1" "November 2015" "mesos 0.22.0" "User Commands"
+.SH NAME
+mesos-slave \- Worker agent for Mesos clusters.
+.SH SYNOPSIS
+.B mesos-slave
+[...]
+.SH DESCRIPTION
+.SS "Supported options:"
+.TP
+\fB\-\-attributes\fR=\fIVALUE\fR
+Attributes of machine, in the form:
+rack:2 or 'rack:2;u:1'
+.TP
+\fB\-\-authenticatee\fR=\fIVALUE\fR
+Authenticatee implementation to use when authenticating against the
+master. Use the default 'crammd5', or
+load an alternate authenticatee module using \fB\-\-modules\fR. (default: crammd5)
+.TP
+\fB\-\-[no\-]cgroups_enable_cfs\fR
+Cgroups feature flag to enable hard limits on CPU resources
+via the CFS bandwidth limiting subfeature.
+(default: false)
+.TP
+\fB\-\-cgroups_hierarchy\fR=\fIVALUE\fR
+The path to the cgroups hierarchy root
+(default: \fI/sys/fs/cgroup\fP)
+.TP
+\fB\-\-[no\-]cgroups_limit_swap\fR
+Cgroups feature flag to enable memory limits on both memory and
+swap instead of just memory.
+(default: false)
+.TP
+\fB\-\-cgroups_root\fR=\fIVALUE\fR
+Name of the root cgroup
+(default: mesos)
+.TP
+\fB\-\-container_disk_watch_interval\fR=\fIVALUE\fR
+The interval between disk quota checks for containers. This flag is
+used for the 'posix/disk' isolator. (default: 15secs)
+.TP
+\fB\-\-containerizer_path\fR=\fIVALUE\fR
+The path to the external containerizer executable used when
+external isolation is activated (\fB\-\-isolation\fR=\fIexternal\fR).
+.TP
+\fB\-\-containerizers\fR=\fIVALUE\fR
+Comma separated list of containerizer implementations
+to compose in order to provide containerization.
+Available options are 'mesos', 'external', and
+\&'docker' (on Linux). The order the containerizers
+are specified is the order they are tried
+(\fB\-\-containerizers\fR=\fImesos\fR).
+(default: mesos)
+.TP
+\fB\-\-credential\fR=\fIVALUE\fR
+Either a path to a text with a single line
+containing 'principal' and 'secret' separated by whitespace.
+Or a path containing the JSON formatted information used for one credential.
+Path could be of the form 'file:///path/to/file' or '/path/to/file'.
+Example:
+{
+.IP
+"principal": "username",
+"secret": "secret",
+.IP
+}
+.TP
+\fB\-\-default_container_image\fR=\fIVALUE\fR
+The default container image to use if not specified by a task,
+when using external containerizer.
+.TP
+\fB\-\-default_container_info\fR=\fIVALUE\fR
+JSON formatted ContainerInfo that will be included into
+any ExecutorInfo that does not specify a ContainerInfo.
+.IP
+See the ContainerInfo protobuf in mesos.proto for
+the expected format.
+.IP
+Example:
+{
+"type": "MESOS",
+"volumes": [
+.IP
+{
+.IP
+"host_path": "./.private/tmp",
+"container_path": "/tmp",
+"mode": "RW"
+.IP
+}
+.IP
+]
+.IP
+}
+.TP
+\fB\-\-default_role\fR=\fIVALUE\fR
+Any resources in the \fB\-\-resources\fR flag that
+omit a role, as well as any resources that
+are not present in \fB\-\-resources\fR but that are
+automatically detected, will be assigned to
+this role. (default: *)
+.TP
+\fB\-\-disk_watch_interval\fR=\fIVALUE\fR
+Periodic time interval (e.g., 10secs, 2mins, etc)
+to check the overall disk usage managed by the slave.
+This drives the garbage collection of archived
+information and sandboxes. (default: 1mins)
+.TP
+\fB\-\-docker\fR=\fIVALUE\fR
+The absolute path to the docker executable for docker
+containerizer.
+(default: docker)
+.TP
+\fB\-\-docker_remove_delay\fR=\fIVALUE\fR
+The amount of time to wait before removing docker containers
+(e.g., 3days, 2weeks, etc).
+(default: 6hrs)
+.TP
+\fB\-\-docker_sandbox_directory\fR=\fIVALUE\fR
+The absolute path for the directory in the container where the
+sandbox is mapped to.
+(default: \fI/mnt/mesos/sandbox\fP)
+.TP
+\fB\-\-docker_stop_timeout\fR=\fIVALUE\fR
+The time as a duration for docker to wait after stopping an instance
+before it kills that instance. (default: 0ns)
+.TP
+\fB\-\-egress_rate_limit_per_container\fR=\fIVALUE\fR
+The limit of the egress traffic for each container, in Bytes/s.
+If not specified or specified as zero, the network isolator will
+impose no limits to containers' egress traffic throughput.
+This flag uses the Bytes type (defined in stout) and is used for
+the 'network/port_mapping' isolator.
+.TP
+\fB\-\-[no\-]enforce_container_disk_quota\fR
+Whether to enable disk quota enforcement for containers. This flag
+is used for the 'posix/disk' isolator. (default: false)
+.TP
+\fB\-\-ephemeral_ports_per_container\fR=\fIVALUE\fR
+Number of ephemeral ports allocated to a container by the network
+isolator. This number has to be a power of 2. This flag is used
+for the 'network/port_mapping' isolator. (default: 1024)
+.TP
+\fB\-\-eth0_name\fR=\fIVALUE\fR
+The name of the public network interface (e.g., eth0). If it is
+not specified, the network isolator will try to guess it based
+on the host default gateway. This flag is used for the
+\&'network/port_mapping' isolator.
+.TP
+\fB\-\-executor_registration_timeout\fR=\fIVALUE\fR
+Amount of time to wait for an executor
+to register with the slave before considering it hung and
+shutting it down (e.g., 60secs, 3mins, etc) (default: 1mins)
+.TP
+\fB\-\-executor_shutdown_grace_period\fR=\fIVALUE\fR
+Amount of time to wait for an executor
+to shut down (e.g., 60secs, 3mins, etc) (default: 5secs)
+.TP
+\fB\-\-external_log_file\fR=\fIVALUE\fR
+Specified the externally managed log file. This file will be
+exposed in the webui and HTTP api. This is useful when using
+stderr logging as the log file is otherwise unknown to Mesos.
+.TP
+\fB\-\-frameworks_home\fR=\fIVALUE\fR
+Directory path prepended to relative executor URIs (default: )
+.TP
+\fB\-\-gc_delay\fR=\fIVALUE\fR
+Maximum amount of time to wait before cleaning up
+executor directories (e.g., 3days, 2weeks, etc).
+Note that this delay may be shorter depending on
+the available disk usage. (default: 1weeks)
+.TP
+\fB\-\-gc_disk_headroom\fR=\fIVALUE\fR
+Adjust disk headroom used to calculate maximum executor
+directory age. Age is calculated by:
+gc_delay * max(0.0, (1.0 \- gc_disk_headroom \- disk usage))
+every \fB\-\-disk_watch_interval\fR duration. gc_disk_headroom must
+be a value between 0.0 and 1.0 (default: 0.1)
+.TP
+\fB\-\-hadoop_home\fR=\fIVALUE\fR
+Path to find Hadoop installed (for
+fetching framework executors from HDFS)
+(no default, look for HADOOP_HOME in
+environment or find hadoop on PATH) (default: )
+.TP
+\fB\-\-[no\-]help\fR
+Prints this help message (default: false)
+.TP
+\fB\-\-hooks\fR=\fIVALUE\fR
+A comma separated list of hook modules to be
+installed inside the slave.
+.TP
+\fB\-\-hostname\fR=\fIVALUE\fR
+The hostname the slave should report.
+If left unset, the hostname is resolved from the IP address
+that the slave binds to.
+.TP
+\fB\-\-[no\-]initialize_driver_logging\fR
+Whether to automatically initialize google logging of scheduler
+and/or executor drivers. (default: true)
+.TP
+\fB\-\-ip\fR=\fIVALUE\fR
+IP address to listen on
+.TP
+\fB\-\-isolation\fR=\fIVALUE\fR
+Isolation mechanisms to use, e.g., 'posix/cpu,posix/mem', or
+\&'cgroups/cpu,cgroups/mem', or network/port_mapping
+(configure with flag: \fB\-\-with\-network\-isolator\fR to enable),
+or 'external', or load an alternate isolator module using
+the \fB\-\-modules\fR flag. (default: posix/cpu,posix/mem)
+.TP
+\fB\-\-launcher_dir\fR=\fIVALUE\fR
+Directory path of Mesos binaries (default: \fI/usr/lib/mesos\fP)
+.TP
+\fB\-\-lo_name\fR=\fIVALUE\fR
+The name of the loopback network interface (e.g., lo). If it is
+not specified, the network isolator will try to guess it. This
+flag is used for the 'network/port_mapping' isolator.
+.TP
+\fB\-\-log_dir\fR=\fIVALUE\fR
+Directory path to put log files (no default, nothing
+is written to disk unless specified;
+does not affect logging to stderr).
+NOTE: 3rd party log messages (e.g. ZooKeeper) are
+only written to stderr!
+.TP
+\fB\-\-logbufsecs\fR=\fIVALUE\fR
+How many seconds to buffer log messages for (default: 0)
+.TP
+\fB\-\-logging_level\fR=\fIVALUE\fR
+Log message at or above this level; possible values:
+\&'INFO', 'WARNING', 'ERROR'; if quiet flag is used, this
+will affect just the logs from log_dir (if specified) (default: INFO)
+.TP
+\fB\-\-master\fR=\fIVALUE\fR
+May be one of:
+zk://host1:port1,host2:port2,.../path
+zk://username:password@host1:port1,host2:port2,.../path
+file:///path/to/file (where file contains one of the above)
+.TP
+\fB\-\-modules\fR=\fIVALUE\fR
+List of modules to be loaded and be available to the internal
+subsystems.
+.IP
+Use \fB\-\-modules\fR=\fIfilepath\fR to specify the list of modules via a
+file containing a JSON formatted string. 'filepath' can be
+of the form 'file:///path/to/file' or '/path/to/file'.
+.IP
+Use \fB\-\-modules=\fR"{...}" to specify the list of modules inline.
+.IP
+Example:
+{
+.IP
+"libraries": [
+.IP
+{
+.IP
+"file": "/path/to/libfoo.so",
+"modules": [
+.IP
+{
+.IP
+"name": "org_apache_mesos_bar",
+"parameters": [
+.IP
+{
+.IP
+"key": "X",
+"value": "Y"
+.IP
+}
+.IP
+]
+.IP
+},
+{
+.IP
+"name": "org_apache_mesos_baz"
+.IP
+}
+.IP
+]
+.IP
+},
+{
+.IP
+"name": "qux",
+"modules": [
+.IP
+{
+.IP
+"name": "org_apache_mesos_norf"
+.IP
+}
+.IP
+]
+.IP
+}
+.IP
+]
+.IP
+}
+.TP
+\fB\-\-[no\-]network_enable_socket_statistics_details\fR
+Whether to collect socket statistics details (e.g., TCP RTT) for
+each container. This flag is used for the 'network/port_mapping'
+isolator. (default: false)
+.TP
+\fB\-\-[no\-]network_enable_socket_statistics_summary\fR
+Whether to collect socket statistics summary for each container.
+This flag is used for the 'network/port_mapping' isolator. (default: false)
+.TP
+\fB\-\-perf_duration\fR=\fIVALUE\fR
+Duration of a perf stat sample. The duration must be less
+that the perf_interval. (default: 10secs)
+.TP
+\fB\-\-perf_events\fR=\fIVALUE\fR
+List of command\-separated perf events to sample for each container
+when using the perf_event isolator. Default is none.
+Run command 'perf list' to see all events. Event names are
+sanitized by downcasing and replacing hyphens with underscores
+when reported in the PerfStatistics protobuf, e.g., cpu\-cycles
+becomes cpu_cycles; see the PerfStatistics protobuf for all names.
+.TP
+\fB\-\-perf_interval\fR=\fIVALUE\fR
+Interval between the start of perf stat samples. Perf samples are
+obtained periodically according to perf_interval and the most
+recently obtained sample is returned rather than sampling on
+demand. For this reason, perf_interval is independent of the
+resource monitoring interval (default: 1mins)
+.TP
+\fB\-\-port\fR=\fIVALUE\fR
+Port to listen on (default: 5051)
+.TP
+\fB\-\-[no\-]quiet\fR
+Disable logging to stderr (default: false)
+.TP
+\fB\-\-recover\fR=\fIVALUE\fR
+Whether to recover status updates and reconnect with old executors.
+Valid values for 'recover' are
+reconnect: Reconnect with any old live executors.
+cleanup  : Kill any old live executors and exit.
+.IP
+Use this option when doing an incompatible slave
+or executor upgrade!).
+.IP
+NOTE: If checkpointed slave doesn't exist, no recovery is performed
+.IP
+and the slave registers with the master as a new slave. (default: reconnect)
+.TP
+\fB\-\-recovery_timeout\fR=\fIVALUE\fR
+Amount of time alloted for the slave to recover. If the slave takes
+longer than recovery_timeout to recover, any executors that are
+waiting to reconnect to the slave will self\-terminate.
+NOTE: This flag is only applicable when checkpoint is enabled.
+(default: 15mins)
+.TP
+\fB\-\-registration_backoff_factor\fR=\fIVALUE\fR
+Slave initially picks a random amount of time between [0, b], where
+b = registration_backoff_factor, to (re\-)register with a new master.
+Subsequent retries are exponentially backed off based on this
+interval (e.g., 1st retry uses a random value between [0, b * 2^1],
+2nd retry between [0, b * 2^2], 3rd retry between [0, b * 2^3] etc)
+up to a maximum of 1mins (default: 1secs)
+.TP
+\fB\-\-resource_monitoring_interval\fR=\fIVALUE\fR
+Periodic time interval for monitoring executor
+resource usage (e.g., 10secs, 1min, etc) (default: 1secs)
+.TP
+\fB\-\-resources\fR=\fIVALUE\fR
+Total consumable resources per slave, in
+the form 'name(role):value;name(role):value...'.
+.TP
+\fB\-\-slave_subsystems\fR=\fIVALUE\fR
+List of comma\-separated cgroup subsystems to run the slave binary
+in, e.g., 'memory,cpuacct'. The default is none.
+Present functionality is intended for resource monitoring and
+no cgroup limits are set, they are inherited from the root mesos
+cgroup.
+.TP
+\fB\-\-[no\-]strict\fR
+If strict=true, any and all recovery errors are considered fatal.
+If strict=false, any expected errors (e.g., slave cannot recover
+information about an executor, because the slave died right before
+the executor registered.) during recovery are ignored and as much
+state as possible is recovered.
+(default: true)
+.TP
+\fB\-\-[no\-]switch_user\fR
+Whether to run tasks as the user who
+submitted them rather than the user running
+the slave (requires setuid permission) (default: true)
+.TP
+\fB\-\-[no\-]version\fR
+Show version and exit. (default: false)
+.TP
+\fB\-\-work_dir\fR=\fIVALUE\fR
+Directory path to place framework work directories
+(default: \fI/tmp/mesos\fP)

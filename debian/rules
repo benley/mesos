@@ -16,30 +16,37 @@ export DEB_BUILD_OPTIONS=parallel=$(shell grep "core id" -c /proc/cpuinfo)
 export JAVA_HOME := /usr/lib/jvm/default-java
 
 override_dh_auto_configure:
-	dh_auto_configure -- --prefix=/usr \
-		--localstatedir=/usr/lib/ \
-		--libexecdir=/usr/lib/ \
-		--without-cxx11 \
-		--enable-optimize \
-		--with-network-isolator
+	dh_auto_configure -- \
+	  --prefix=/usr \
+	  --localstatedir=/usr/lib/ \
+	  --libexecdir=/usr/lib/ \
+	  --without-cxx11 \
+	  --enable-optimize \
+	  --with-network-isolator
 
 override_dh_auto_build:
 	dh_auto_build
 	# Build Python bindings
-	cd src/python && \
-		for pv in $(PYVERS); do \
-			python$$pv setup.py build --build-base=$(CURDIR)/src/python/build --root=$(CURDIR)/debian/tmp --install-layout=deb ;\
-		done
+	#cd src/python && \
+	#  for pv in $(PYVERS); do \
+	#    python$$pv setup.py build \
+	#      --build-base=$(CURDIR)/src/python/build ;\
+	#  done
 
-override_dh_install:
+override_dh_auto_install:
 	# Install Python bindings
-	for pv in $(PYVERS); do \
-			cd src/python/native && python$$pv setup.py build --build-base=$(CURDIR)/src/python/build install --root=$(CURDIR)/debian/tmp --install-layout=deb &&\
-			cd ../interface && python$$pv setup.py  build --build-base=$(CURDIR)/src/python/build install --root=$(CURDIR)/debian/tmp --install-layout=deb &&\
-			cd .. && python$$pv setup.py  build --build-base=$(CURDIR)/src/python/build install --root=$(CURDIR)/debian/tmp --install-layout=deb ;\
-		done; \
-	done
-	dh_install
+	#for pv in $(PYVERS); do \
+	#  cd src/python/native \
+	#  && python$$pv setup.py \
+	#       install --root=$(CURDIR)/debian/tmp --install-layout=deb \
+	#  && cd ../interface \
+	#  && python$$pv setup.py \
+	#       install --root=$(CURDIR)/debian/tmp --install-layout=deb \
+	#  && cd .. \
+	#  && python$$pv setup.py \
+	#       install --root=$(CURDIR)/debian/tmp --install-layout=deb \
+	#; done
+	dh_auto_install
 
 override_dh_auto_test:
 	# Because cgroup test dependencies might not be available when building within docker
@@ -48,5 +55,3 @@ override_dh_auto_test:
 
 %:
 	dh $@ --parallel --with autoreconf --with python2
-
-

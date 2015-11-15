@@ -1,0 +1,357 @@
+.TH MESOS "1" "November 2015" "mesos 0.22.0" "User Commands"
+.SH NAME
+mesos-master \- Master controller for Mesos clusters.
+.SH SYNOPSIS
+.B mesos-master
+[...]
+.SH DESCRIPTION
+.SS "Supported options:"
+.TP
+\fB\-\-acls\fR=\fIVALUE\fR
+The value could be a JSON formatted string of ACLs
+or a file path containing the JSON formatted ACLs used
+for authorization. Path could be of the form 'file:///path/to/file'
+or '/path/to/file'.
+.IP
+See the ACLs protobuf in mesos.proto for the expected format.
+.IP
+Example:
+{
+.IP
+"register_frameworks": [
+.IP
+{
+.IP
+"principals": { "type": "ANY" },
+"roles": { "values": ["a"] }
+.IP
+}
+.IP
+],
+.IP
+"run_tasks": [
+.IP
+{
+.IP
+"principals": { "values": ["a", "b"] },
+"users": { "values": ["c"] }
+.IP
+}
+.IP
+],
+.IP
+"shutdown_frameworks": [
+.IP
+{
+.IP
+"principals": { "values": ["a", "b"] },
+"framework_principals": { "values": ["c"] }
+.IP
+}
+.IP
+]
+.IP
+}
+.TP
+\fB\-\-allocation_interval\fR=\fIVALUE\fR
+Amount of time to wait between performing
+(batch) allocations (e.g., 500ms, 1sec, etc). (default: 1secs)
+.TP
+\fB\-\-[no\-]authenticate\fR
+If authenticate is 'true' only authenticated frameworks are allowed
+to register. If 'false' unauthenticated frameworks are also
+allowed to register. (default: false)
+.TP
+\fB\-\-[no\-]authenticate_slaves\fR
+If 'true' only authenticated slaves are allowed to register.
+If 'false' unauthenticated slaves are also allowed to register. (default: false)
+.TP
+\fB\-\-authenticators\fR=\fIVALUE\fR
+Authenticator implementation to use when authenticating frameworks
+and/or slaves. Use the default 'crammd5', or
+load an alternate authenticator module using \fB\-\-modules\fR. (default: crammd5)
+.TP
+\fB\-\-cluster\fR=\fIVALUE\fR
+Human readable name for the cluster,
+displayed in the webui.
+.TP
+\fB\-\-credentials\fR=\fIVALUE\fR
+Either a path to a text file with a list of credentials,
+each line containing 'principal' and 'secret' separated by whitespace,
+or, a path to a JSON\-formatted file containing credentials.
+Path could be of the form 'file:///path/to/file' or '/path/to/file'.
+JSON file Example:
+{
+.IP
+"credentials": [
+.IP
+{
+.IP
+"principal": "sherman",
+"secret": "kitesurf",
+.IP
+}
+.IP
+]
+.IP
+}
+Text file Example:
+username secret
+.TP
+\fB\-\-external_log_file\fR=\fIVALUE\fR
+Specified the externally managed log file. This file will be
+exposed in the webui and HTTP api. This is useful when using
+stderr logging as the log file is otherwise unknown to Mesos.
+.TP
+\fB\-\-framework_sorter\fR=\fIVALUE\fR
+Policy to use for allocating resources
+between a given user's frameworks. Options
+are the same as for user_allocator. (default: drf)
+.TP
+\fB\-\-[no\-]help\fR
+Prints this help message (default: false)
+.TP
+\fB\-\-hooks\fR=\fIVALUE\fR
+A comma separated list of hook modules to be
+installed inside master.
+.TP
+\fB\-\-hostname\fR=\fIVALUE\fR
+The hostname the master should advertise in ZooKeeper.
+If left unset, the hostname is resolved from the IP address
+that the master binds to.
+.TP
+\fB\-\-[no\-]initialize_driver_logging\fR
+Whether to automatically initialize google logging of scheduler
+and/or executor drivers. (default: true)
+.TP
+\fB\-\-ip\fR=\fIVALUE\fR
+IP address to listen on
+.TP
+\fB\-\-[no\-]log_auto_initialize\fR
+Whether to automatically initialize the replicated log used for the
+registry. If this is set to false, the log has to be manually
+initialized when used for the very first time. (default: true)
+.TP
+\fB\-\-log_dir\fR=\fIVALUE\fR
+Directory path to put log files (no default, nothing
+is written to disk unless specified;
+does not affect logging to stderr).
+NOTE: 3rd party log messages (e.g. ZooKeeper) are
+only written to stderr!
+.TP
+\fB\-\-logbufsecs\fR=\fIVALUE\fR
+How many seconds to buffer log messages for (default: 0)
+.TP
+\fB\-\-logging_level\fR=\fIVALUE\fR
+Log message at or above this level; possible values:
+\&'INFO', 'WARNING', 'ERROR'; if quiet flag is used, this
+will affect just the logs from log_dir (if specified) (default: INFO)
+.TP
+\fB\-\-max_executors_per_slave\fR=\fIVALUE\fR
+Maximum number of executors allowed per slave. The network
+monitoring/isolation technique imposes an implicit resource
+acquisition on each executor (# ephemeral ports), as a result
+one can only run a certain number of executors on each slave.
+.TP
+\fB\-\-modules\fR=\fIVALUE\fR
+List of modules to be loaded and be available to the internal
+subsystems.
+.IP
+Use \fB\-\-modules\fR=\fIfilepath\fR to specify the list of modules via a
+file containing a JSON formatted string. 'filepath' can be
+of the form 'file:///path/to/file' or '/path/to/file'.
+.IP
+Use \fB\-\-modules=\fR"{...}" to specify the list of modules inline.
+.IP
+Example:
+{
+.IP
+"libraries": [
+.IP
+{
+.IP
+"file": "/path/to/libfoo.so",
+"modules": [
+.IP
+{
+.IP
+"name": "org_apache_mesos_bar",
+"parameters": [
+.IP
+{
+.IP
+"key": "X",
+"value": "Y"
+.IP
+}
+.IP
+]
+.IP
+},
+{
+.IP
+"name": "org_apache_mesos_baz"
+.IP
+}
+.IP
+]
+.IP
+},
+{
+.IP
+"name": "qux",
+"modules": [
+.IP
+{
+.IP
+"name": "org_apache_mesos_norf"
+.IP
+}
+.IP
+]
+.IP
+}
+.IP
+]
+.IP
+}
+.TP
+\fB\-\-offer_timeout\fR=\fIVALUE\fR
+Duration of time before an offer is rescinded from a framework.
+This helps fairness when running frameworks that hold on to offers,
+or frameworks that accidentally drop offers.
+.TP
+\fB\-\-port\fR=\fIVALUE\fR
+Port to listen on (default: 5050)
+.TP
+\fB\-\-[no\-]quiet\fR
+Disable logging to stderr (default: false)
+.TP
+\fB\-\-quorum\fR=\fIVALUE\fR
+The size of the quorum of replicas when using 'replicated_log' based
+registry. It is imperative to set this value to be a majority of
+masters i.e., quorum > (number of masters)/2.
+.TP
+\fB\-\-rate_limits\fR=\fIVALUE\fR
+The value could be a JSON formatted string of rate limits
+or a file path containing the JSON formatted rate limits used
+for framework rate limiting.
+Path could be of the form 'file:///path/to/file'
+or '/path/to/file'.
+.IP
+See the RateLimits protobuf in mesos.proto for the expected format.
+.IP
+Example:
+{
+.IP
+"limits": [
+.IP
+{
+.IP
+"principal": "foo",
+"qps": 55.5
+.IP
+},
+{
+.IP
+"principal": "bar"
+.IP
+}
+.IP
+],
+"aggregate_default_qps": 33.3
+.IP
+}
+.TP
+\fB\-\-recovery_slave_removal_limit\fR=\fIVALUE\fR
+For failovers, limit on the percentage of slaves that can be removed
+from the registry *and* shutdown after the re\-registration timeout
+elapses. If the limit is exceeded, the master will fail over rather
+than remove the slaves.
+This can be used to provide safety guarantees for production
+environments. Production environments may expect that across Master
+failovers, at most a certain percentage of slaves will fail
+permanently (e.g. due to rack\-level failures).
+Setting this limit would ensure that a human needs to get
+involved should an unexpected widespread failure of slaves occur
+in the cluster.
+Values: [0%\-100%] (default: 100%)
+.TP
+\fB\-\-registry\fR=\fIVALUE\fR
+Persistence strategy for the registry;
+available options are 'replicated_log', 'in_memory' (for testing). (default: replicated_log)
+.TP
+\fB\-\-registry_fetch_timeout\fR=\fIVALUE\fR
+Duration of time to wait in order to fetch data from the registry
+after which the operation is considered a failure. (default: 1mins)
+.TP
+\fB\-\-registry_store_timeout\fR=\fIVALUE\fR
+Duration of time to wait in order to store data in the registry
+after which the operation is considered a failure. (default: 5secs)
+.TP
+\fB\-\-[no\-]registry_strict\fR
+Whether the Master will take actions based on the persistent
+information stored in the Registry. Setting this to false means
+that the Registrar will never reject the admission, readmission,
+or removal of a slave. Consequently, 'false' can be used to
+bootstrap the persistent state on a running cluster.
+NOTE: This flag is *experimental* and should not be used in
+production yet. (default: false)
+.TP
+\fB\-\-roles\fR=\fIVALUE\fR
+A comma separated list of the allocation
+roles that frameworks in this cluster may
+belong to.
+.TP
+\fB\-\-[no\-]root_submissions\fR
+Can root submit frameworks? (default: true)
+.TP
+\fB\-\-slave_removal_rate_limit\fR=\fIVALUE\fR
+The maximum rate (e.g., 1/10mins, 2/3hrs, etc) at which slaves will
+be removed from the master when they fail health checks. By default
+slaves will be removed as soon as they fail the health checks.
+The value is of the form <Number of slaves>/<Duration>.
+.TP
+\fB\-\-slave_reregister_timeout\fR=\fIVALUE\fR
+The timeout within which all slaves are expected to re\-register
+when a new master is elected as the leader. Slaves that do not
+re\-register within the timeout will be removed from the registry
+and will be shutdown if they attempt to communicate with master.
+NOTE: This value has to be atleast 10mins. (default: 10mins)
+.TP
+\fB\-\-user_sorter\fR=\fIVALUE\fR
+Policy to use for allocating resources
+between users. May be one of:
+.IP
+dominant_resource_fairness (drf) (default: drf)
+.TP
+\fB\-\-[no\-]version\fR
+Show version and exit. (default: false)
+.TP
+\fB\-\-webui_dir\fR=\fIVALUE\fR
+Directory path of the webui files/assets (default: \fI/usr/share/mesos/webui\fP)
+.TP
+\fB\-\-weights\fR=\fIVALUE\fR
+A comma separated list of role/weight pairs
+of the form 'role=weight,role=weight'. Weights
+are used to indicate forms of priority.
+.TP
+\fB\-\-whitelist\fR=\fIVALUE\fR
+Path to a file with a list of slaves
+(one per line) to advertise offers for.
+Path could be of the form 'file:///path/to/file' or '/path/to/file'.
+.TP
+\fB\-\-work_dir\fR=\fIVALUE\fR
+Directory path to store the persistent information stored in the
+Registry. (example: \fI/var/lib/mesos/master\fP)
+.TP
+\fB\-\-zk\fR=\fIVALUE\fR
+ZooKeeper URL (used for leader election amongst masters)
+May be one of:
+.IP
+zk://host1:port1,host2:port2,.../path
+zk://username:password@host1:port1,host2:port2,.../path
+file:///path/to/file (where file contains one of the above)
+.TP
+\fB\-\-zk_session_timeout\fR=\fIVALUE\fR
+ZooKeeper session timeout. (default: 10secs)

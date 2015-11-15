@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
 
-export DH_VERBOSE=1
+#export DH_VERBOSE=1
 export DH_OPTIONS
 
 DPKG_EXPORT_BUILDFLAGS = 1
@@ -24,33 +24,9 @@ override_dh_auto_configure:
 	  --enable-optimize \
 	  --with-network-isolator
 
-override_dh_auto_build:
-	dh_auto_build
-	# Build Python bindings
-	#cd src/python && \
-	#  for pv in $(PYVERS); do \
-	#    python$$pv setup.py build \
-	#      --build-base=$(CURDIR)/src/python/build ;\
-	#  done
-
-override_dh_auto_install:
-	# Install Python bindings
-	#for pv in $(PYVERS); do \
-	#  cd src/python/native \
-	#  && python$$pv setup.py \
-	#       install --root=$(CURDIR)/debian/tmp --install-layout=deb \
-	#  && cd ../interface \
-	#  && python$$pv setup.py \
-	#       install --root=$(CURDIR)/debian/tmp --install-layout=deb \
-	#  && cd .. \
-	#  && python$$pv setup.py \
-	#       install --root=$(CURDIR)/debian/tmp --install-layout=deb \
-	#; done
-	dh_auto_install
-
 override_dh_auto_test:
-	# Because cgroup test dependencies might not be available when building within docker
-	# just skip them completely.
+	# Because cgroup test dependencies might not be available when building
+	# within docker just skip them completely.
 	true
 
 %:

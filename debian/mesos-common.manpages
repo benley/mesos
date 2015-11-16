@@ -1,0 +1,7 @@
+debian/mesos-cat.1
+debian/mesos-execute.1
+debian/mesos-local.1
+debian/mesos-ps.1
+debian/mesos-resolve.1
+debian/mesos-scp.1
+debian/mesos-tail.1

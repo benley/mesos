@@ -15,10 +15,6 @@ export DEB_BUILD_OPTIONS=parallel=$(shell grep "core id" -c /proc/cpuinfo)
 
 export JAVA_HOME := /usr/lib/jvm/default-java
 
-override_dh_installinit:
-	dh_installinit --name=mesos
-	dh_installinit
-
 override_dh_auto_configure:
 	dh_auto_configure -- \
 	  --prefix=/usr \

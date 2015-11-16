@@ -1,2 +1,23 @@
-PORT=5050
-ZK=`cat /etc/mesos/zk`
+# Mesos Master options and args
+
+ARGS=""
+
+# If you're not using upstart, or dislike the way it handles logs,
+# you may want to set this:
+#ARGS+="--log_dir=/var/log/mesos"
+
+# Cluster name:
+ARGS+="--cluster=unnamed"
+
+ARGS+="--hostname=$(hostname --fqdn)"
+
+ARGS+="--port=5050"
+
+# Unless you're certain you know what you're doing,
+# always set quorum to floor(number_of_masters / 2) + 1
+ARGS+="--quorum=1"
+
+ARGS+="--work_dir=/var/lib/mesos/master"
+
+# Zookeeper URI for mesos master
+ARGS+="--zk=$(cat /etc/mesos/zk)"

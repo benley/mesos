@@ -7,4 +7,9 @@ description "mesos master"
 start on stopped rc RUNLEVEL=[2345]
 respawn
 
-exec /usr/bin/mesos-init-wrapper master
+script
+  [ -e /etc/default/mesos-master ] && . /etc/default/mesos-master
+
+  exec /usr/sbin/mesos-master $ARGS \
+    --external_log_file=/var/log/upstart/mesos-master.log
+end script

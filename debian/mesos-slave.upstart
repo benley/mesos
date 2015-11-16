@@ -1,4 +1,4 @@
-description "mesos slave"
+description "Mesos slave"
 
 # Start just after the System-V jobs (rc) to ensure networking and zookeeper
 # are started. This is as simple as possible to ensure compatibility with
@@ -7,4 +7,9 @@ description "mesos slave"
 start on stopped rc RUNLEVEL=[2345]
 respawn
 
-exec /usr/bin/mesos-init-wrapper slave
+script
+  [ -e /etc/default/mesos-slave ] && . /etc/default/mesos-slave
+
+  /usr/sbin/mesos-slave $ARGS \
+    --external_log_file=/var/log/upstart/mesos-slave.log
+end script

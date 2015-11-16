@@ -1,3 +1,2 @@
-debian/mesos-init-wrapper  /usr/bin
 /usr/bin
 /usr/lib/mesos /usr/lib

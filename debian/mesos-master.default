@@ -1,23 +1,23 @@
 # Mesos Master options and args
 
-ARGS=""
+# You probably ought to name your cluster.
+CLUSTER=unnamed
 
-# If you're not using upstart, or dislike the way it handles logs,
-# you may want to set this:
-#ARGS+="--log_dir=/var/log/mesos"
-
-# Cluster name:
-ARGS+="--cluster=unnamed"
-
-ARGS+="--hostname=$(hostname --fqdn)"
-
-ARGS+="--port=5050"
+# Hostname that's given to clients and frameworks
+HOSTNAME=$(hostname --fqdn)
 
 # Unless you're certain you know what you're doing,
 # always set quorum to floor(number_of_masters / 2) + 1
-ARGS+="--quorum=1"
+QUORUM=1
 
-ARGS+="--work_dir=/var/lib/mesos/master"
+# Zookeeper URI for the master instance
+ZK=$(cat /etc/mesos/zk)
 
-# Zookeeper URI for mesos master
-ARGS+="--zk=$(cat /etc/mesos/zk)"
+ARGS="
+  --cluster=$CLUSTER
+  --hostname=$HOSTNAME
+  --port=5050
+  --quorum=$QUORUM
+  --work_dir=/var/lib/mesos/master
+  --zk=$ZK
+"

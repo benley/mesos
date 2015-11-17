@@ -1,6 +1,7 @@
-mesos (0.25.0-0~trusty1) UNRELEASED; urgency=medium
+mesos (0.25.0-0fitbit1) trusty; urgency=medium
 
   * Update to Mesos 0.25.0
+  * Fancy
 
  -- Benjamin Staffin <bstaffin@fitbit.com>  Sun, 15 Nov 2015 22:45:49 +0000
 

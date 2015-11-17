@@ -8,8 +8,10 @@ start on stopped rc RUNLEVEL=[2345]
 respawn
 
 script
+  set -a
+  EXTRA_ARGS=""
   [ -e /etc/default/mesos-slave ] && . /etc/default/mesos-slave
 
-  /usr/sbin/mesos-slave $ARGS \
+  /usr/sbin/mesos-slave $EXTRA_ARGS \
     --external_log_file=/var/log/upstart/mesos-slave.log
 end script

@@ -1,23 +1,21 @@
 # Mesos Master options and args
 
 # You probably ought to name your cluster.
-CLUSTER=unnamed
+MESOS_CLUSTER="unnamed"
 
 # Hostname that's given to clients and frameworks
-HOSTNAME=$(hostname --fqdn)
+MESOS_HOSTNAME=$(hostname --fqdn)
+
+MESOS_PORT=5050
 
 # Unless you're certain you know what you're doing,
 # always set quorum to floor(number_of_masters / 2) + 1
-QUORUM=1
+MESOS_QUORUM=1
+
+MESOS_WORK_DIR="/var/lib/mesos/master"
 
 # Zookeeper URI for the master instance
-ZK=$(cat /etc/mesos/zk)
+MESOS_ZK=$(cat /etc/mesos/zk)
 
-ARGS="
-  --cluster=$CLUSTER
-  --hostname=$HOSTNAME
-  --port=5050
-  --quorum=$QUORUM
-  --work_dir=/var/lib/mesos/master
-  --zk=$ZK
-"
+# Any extra commandline args:
+EXTRA_ARGS=""

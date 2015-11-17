@@ -1,29 +1,30 @@
 # Mesos slave options and args
 
-CREDENTIALS_FILE="/etc/mesos-slave/credentials"
+MESOS_APPC_STORE_DIR="/var/lib/mesos/store/appc"
 
-CONTAINERIZERS="docker,mesos"
+MESOS_CGROUPS_CPU_ENABLE_PIDS_AND_TIDS_COUNT="true"
+
+MESOS_CGROUPS_ENABLE_CFS="true"
+
+MESOS_CONTAINERIZERS="docker,mesos"
+
+# Allow for how long it takes to download Docker images:
+MESOS_EXECUTOR_REGISTRATION_TIMEOUT="5mins"
+
+MESOS_FETCHER_CACHE_DIR="/var/cache/mesos/fetch"
 
 # Hostname used to register with the master
-HOSTNAME=$(hostname --fqdn)
+MESOS_HOSTNAME=$(hostname --fqdn)
 
 # Add network/port_mapping to use the network isolator
-ISOLATION="cgroups/cpu,cgroups/mem"
+MESOS_ISOLATION="cgroups/cpu,cgroups/mem"
 
 # Zookeeper URI to locate the mesos master
-ZK="$(cat /etc/mesos/zk)"
+MESOS_MASTER="$(cat /etc/mesos/zk)"
 
-ARGS="
-  --appc_store_dir=/var/lib/mesos/store/appc
-  --cgroups_cpu_enable_pids_and_tids_count
-  --cgroups_enable_cfs
-  --containerizers=$CONTAINERIZERS
-  --credential=$CREDENTIALS_FILE
-  --executor_registration_timeout=5mins
-  --fetcher_cache_dir=/var/cache/mesos/fetch
-  --hostname=$HOSTNAME
-  --isolation=$ISOLATION
-  --master=$ZK
-  --port=5051
-  --work_dir=/var/lib/mesos/slave
-"
+MESOS_PORT=5051
+
+MESOS_WORK_DIR="/var/lib/mesos/slave"
+
+# Any extra commandline args:
+EXTRA_ARGS=""

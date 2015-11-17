@@ -1,4 +1,13 @@
-# Mesos slave options and args
+# mesos-slave options and args
+#
+# Any commandline option can be set with a MESOS_ prefix.
+#
+# Examples:
+#
+# Environment variable     Commandline equivalent
+# --------------------     ----------------------
+# MESOS_WORK_DIR=/asdf     --work_dir=/asdf
+# MESOS_QUIET=true         --quiet
 
 MESOS_APPC_STORE_DIR="/var/lib/mesos/store/appc"
 
@@ -19,8 +28,8 @@ MESOS_HOSTNAME=$(hostname --fqdn)
 # Add network/port_mapping to use the network isolator
 MESOS_ISOLATION="cgroups/cpu,cgroups/mem"
 
-# Zookeeper URI to locate the mesos master
-MESOS_MASTER="$(cat /etc/mesos/zk)"
+# URI (host:port or zk://...) to locate the mesos master
+MESOS_MASTER="localhost:5050"
 
 MESOS_PORT=5051
 

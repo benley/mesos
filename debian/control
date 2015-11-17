@@ -79,16 +79,19 @@ Depends:
  ${misc:Depends},
  ${python:Depends},
  ${shlibs:Depends}
-Description: Mesos common
+Description: Mesos common components
  Apache Mesos is a cluster manager that provides efficient resource isolation
  and sharing across distributed applications, or frameworks. It can run
  Hadoop, MPI, Hypertable, Spark (a new framework for low-latency interactive
  and iterative jobs), and other applications.
+ .
+ This package contains components used by mesos-master and mesos-slave.
 
 Package: mesos-master
 Architecture: any
 Section: misc
 Conflicts: mesos
+Suggests: zookeeperd
 Depends:
  mesos-common (= ${binary:Version}),
  ${misc:Depends},
@@ -98,6 +101,8 @@ Description: Mesos master daemon
  and sharing across distributed applications, or frameworks. It can run
  Hadoop, MPI, Hypertable, Spark (a new framework for low-latency interactive
  and iterative jobs), and other applications.
+ .
+ This package contains the mesos master daemon.
 
 Package: mesos-slave
 Architecture: any
@@ -112,3 +117,5 @@ Description: Mesos slave daemon
  and sharing across distributed applications, or frameworks. It can run
  Hadoop, MPI, Hypertable, Spark (a new framework for low-latency interactive
  and iterative jobs), and other applications.
+ .
+ This package contains the mesos slave daemon.

@@ -1,2 +1,2 @@
-/etc/mesos
-/etc/mesos-master
+/var/lib/mesos
+/var/lib/mesos/master

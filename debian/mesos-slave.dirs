@@ -1,2 +1,4 @@
-/etc/mesos
-/etc/mesos-slave
+/var/cache/mesos
+/var/lib/mesos
+/var/lib/mesos/slave
+/var/lib/mesos/store

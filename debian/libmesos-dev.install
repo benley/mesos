@@ -1,2 +1,3 @@
 /usr/include
-usr/lib/*/libmesos.so
+/usr/lib/*/libmesos.so
+/usr/lib/*/pkgconfig

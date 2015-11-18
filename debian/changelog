@@ -1,3 +1,9 @@
+mesos (0.25.0-0fitbit2) trusty; urgency=medium
+
+  * Include pkgconfig info in libmesos-dev
+
+ -- Benjamin Staffin <bstaffin@fitbit.com>  Wed, 18 Nov 2015 07:13:06 +0000
+
 mesos (0.25.0-0fitbit1) trusty; urgency=medium
 
   * Update to Mesos 0.25.0

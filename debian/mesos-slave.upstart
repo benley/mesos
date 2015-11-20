@@ -12,6 +12,6 @@ script
   EXTRA_ARGS=""
   [ -e /etc/default/mesos-slave ] && . /etc/default/mesos-slave
 
-  /usr/sbin/mesos-slave $EXTRA_ARGS \
+  exec /usr/sbin/mesos-slave $EXTRA_ARGS \
     --external_log_file=/var/log/upstart/mesos-slave.log
 end script
